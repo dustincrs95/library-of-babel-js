@@ -11,7 +11,7 @@ This is a TS package I wrote whilst studying, and trying to replicate, the algor
 ## Usage
 
 ### Before you begin
-If you aren't familiar with how the Library of Babel works (from the short story), then the usage of the functions may appear arbitrary or confusing. I highly suggest you [give it a read](https://maskofreason.files.wordpress.com/2011/02/the-library-of-babel-by-jorge-luis-borges.pdf). The documentation will assume you have some knowledge of the concepts.
+If you aren't familiar with how the Library of Babel works (from the short story), then this whole repo may not make much sense. I highly suggest you [give it a read](https://maskofreason.files.wordpress.com/2011/02/the-library-of-babel-by-jorge-luis-borges.pdf). The documentation will assume you have some knowledge of the concepts.
 
 
 ### Instancing
@@ -34,7 +34,7 @@ const searchString = 'some string to search for';
 // Exact search looks for PRECISELY the string you have given
 const exactSearchResult = LoB.search(searchString, 'exact');
 
-// Partial search simply finds a page where your string appears in the content, regardless of where in the content is is located
+// Partial search simply finds a page where your string appears in the content, regardless of where in the content it is located
 const partialSearchResult = LoB.search(searchString, 'partial');
 ```
 
@@ -63,6 +63,6 @@ npm run test
 ```
 
 ### Contributing
-To contribute, simply checkout to your own branch, make your commits, push them to your branch, and raise a pull request!
+To contribute, simply checkout to your own branch, push your commits to that branch, and then raise a pull request!
 
 ## I hope you enjoy the package- do contribute!
