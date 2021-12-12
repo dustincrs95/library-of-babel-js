@@ -198,9 +198,9 @@ class LibraryOfBabel {
     }
 
     /**
-     * Generates the title for a page with a given address
+     * Generates the title for a book with a given address
      * @param {string} address  The address string for a given page
-     * @returns {string}        The title of the page
+     * @returns {string}        The title of the book
      */
     getTitle = (address: string) : string => {
         this.validateAddress(address);
@@ -210,9 +210,9 @@ class LibraryOfBabel {
         const wall = addressArray[1];
         const shelf = addressArray[2];
         const volume = addressArray[3];
-        const page = addressArray[4];
 
-        // const locHash = this.calculateHash(wall + shelf+ volume.padStart(2, '0') + page.padStart(3, '0'));
+        // We do +4 here instead of using the title from the address
+        // This is because the title is for the whole book, so it shouldn't change with the page number
         const locHash = this.calculateHash(wall + shelf+ volume + 4);
 
         this.seed = Math.abs(locHash);

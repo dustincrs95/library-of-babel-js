@@ -5,7 +5,8 @@ const seedA = 69;
 const seedB = 70;
 
 const validAddressA = 'abc:1:2:3:4';
-const validAddressB = 'abc:1:2:3:7';
+const validAddressB = 'abc:1:2:3:7'; // Different page of book in validAddressA
+const validAddressC = 'abc:1:2:4:7'; // Different book entirely from validAddressA
 const invalidAddress = 'abc:1:2:3s:4';
 
 describe('getTitle', () => {
@@ -53,10 +54,16 @@ describe('getTitle', () => {
     expect(instance.getTitle(validAddressA)).toEqual(instance.getTitle(validAddressA));
   });
 
-  it('should return different strings for different inputs for the same seed', () => {
+  it('should return the same string (title) for different inputs for the same seed if the book is the same', () => {
     const secondInstance = new LibraryOfBabel(seedA);
 
-    expect(instance.getTitle(validAddressA)).not.toEqual(secondInstance.getTitle(validAddressB));
+    expect(instance.getTitle(validAddressA)).toEqual(secondInstance.getTitle(validAddressB));
+  });
+
+  it('should return different strings for different inputs for the same seed if the book is different', () => {
+    const secondInstance = new LibraryOfBabel(seedA);
+
+    expect(instance.getTitle(validAddressA)).not.toEqual(secondInstance.getTitle(validAddressC));
   });
 
   it('should return different strings for the same input with a different seed', () => {

@@ -1,5 +1,5 @@
 {
-  "name": "@shitsack/library-of-babel",
+  "name": "@hiddenbiscuit/library-of-babel",
   "version": "1.0.0",
   "description": "Library of Babel implementation as a JS package.",
   "main": "./src/library-of-babel.ts",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shitsack/library-of-babel-js.git"
+    "url": "git+https://github.com/hiddenbiscuit/library-of-babel-js.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/shitsack/library-of-babel-js/issues"
+    "url": "https://github.com/hiddenbiscuit/library-of-babel-js/issues"
   },
-  "homepage": "https://github.com/shitsack/library-of-babel-js#readme",
+  "homepage": "https://github.com/hiddenbiscuit/library-of-babel-js#readme",
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
