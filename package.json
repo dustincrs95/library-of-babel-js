@@ -1,0 +1,30 @@
+{
+  "name": "@shitsack/library-of-babel",
+  "version": "1.0.0",
+  "description": "Library of Babel implementation as a JS package.",
+  "main": "./src/library-of-babel.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shitsack/library-of-babel-js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shitsack/library-of-babel-js/issues"
+  },
+  "homepage": "https://github.com/shitsack/library-of-babel-js#readme",
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.16.0",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.12",
+    "babel-jest": "^27.4.4",
+    "jest": "^27.4.4",
+    "typescript": "^4.5.3"
+  }
+}
