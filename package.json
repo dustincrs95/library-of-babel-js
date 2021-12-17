@@ -2,9 +2,10 @@
   "name": "@hiddenbiscuit/library-of-babel",
   "version": "1.0.2",
   "description": "Library of Babel implementation as a JS package.",
-  "main": "./src/library-of-babel.ts",
+  "main": "./index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "babel --extensions .ts,.tsx ./src -d ./dist"
   },
   "repository": {
     "type": "git",
@@ -18,8 +19,9 @@
   },
   "homepage": "https://github.com/hiddenbiscuit/library-of-babel-js#readme",
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.5",
+    "@babel/preset-env": "^7.16.5",
     "@babel/preset-typescript": "^7.16.0",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.12",
