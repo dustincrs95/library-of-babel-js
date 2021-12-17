@@ -1,16 +1,4 @@
-// Need to declare types for a new prototype function...
-interface Number {
-    mod(n: number): number
-}
-
-// Here we define a new mod function for numbers
-// The existing mod (%) doesn't work well for negative numbers.
-// https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
-Number.prototype.mod = function(n: number) : number {
-    return ((this as number % n) + n) % n;
-};
-
-class LibraryOfBabel {
+export class LibraryOfBabel {
     this: any;
     seed: number;
     pageLength: number;
@@ -35,10 +23,21 @@ class LibraryOfBabel {
     }
 
     /**
+     * This function is the corrected form of modulo that can handle negative numbers.
+     * See https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
+     * @param {number}  numberA     The first number for the modulo calculation.
+     * @param {number}  numberB     The second number for the modulo calculation.
+     * @returns {number}        Returns the correct value of numberA % numberB.
+     */
+    modulo = (numberA: number, numberB: number) : number => {
+        return ((numberA % numberB) + numberB) % numberB;
+    }
+
+    /**
      * This generator function takes a seed number as input and returns a function that fits the following description:
      * Generates a random number between the minimum and maximum provided.
      * @param {number}  [min=0]     Minimum value that can be generated.
-     * @param {number}  [max=1]     Maxumum value that can be generated.
+     * @param {number}  [max=1]     Maximum value that can be generated.
      * @returns {number}        Randomly generated result between min and max.
      */
     seededRNGGenerator = (seed: number) => {
@@ -145,7 +144,7 @@ class LibraryOfBabel {
             const index = this.digs.indexOf(searchString[i]);
             // for each calculated value of the rng, it will be added to the index value and modded to len of an
             const rand = this.seededRNG(0, this.digs.length);
-            const newIndex = ( index + parseInt('' + rand)).mod(this.an.length);
+            const newIndex = this.modulo(index + parseInt('' + rand), this.an.length);
             const newChar = this.an[newIndex];
             //hex will be built from the indexes translated into an
             hex += newChar;
@@ -178,20 +177,20 @@ class LibraryOfBabel {
 
         let result = '';
         for (let i = 0; i < hex.length; i++){
-          const index = this.an.indexOf(hex[i]);
-          // for each calculated value of the rng, it will be subtracted from the index value and modded to len of digs
-          const rand = this.seededRNG(0, this.an.length);
-          const newIndex = (index - parseInt('' + rand)).mod(this.digs.length);
-          const newChar = this.digs[newIndex];
-          // document will be built from the indexes translated into digs
-          result += newChar;
+        const index = this.an.indexOf(hex[i]);
+        // for each calculated value of the rng, it will be subtracted from the index value and modded to len of digs
+        const rand = this.seededRNG(0, this.an.length);
+        const newIndex = this.modulo(index - parseInt('' + rand), this.digs.length);
+        const newChar = this.digs[newIndex];
+        // document will be built from the indexes translated into digs
+        result += newChar;
         }
 
         // any leftover space will be filled with random numbers seeded by the hash of the result so far
         this.seed = Math.abs(this.calculateHash(result));
         while (result.length < this.pageLength){
-          const index = parseInt('' + this.seededRNG(0, this.digs.length));
-          result += this.digs[index];
+        const index = parseInt('' + this.seededRNG(0, this.digs.length));
+        result += this.digs[index];
         }
 
         return result.substring(result.length - this.pageLength);
@@ -219,22 +218,20 @@ class LibraryOfBabel {
         let result = '';
 
         for (let i = 0; i < hex.length; i++){
-          const index = this.an.indexOf(hex[i]);
-          const rand = this.seededRNG(0, this.an.length);
-          const newIndex = (index - parseInt('' + rand)).mod(this.digs.length);
-          const newChar = this.digs[newIndex];
-          result += newChar;
+        const index = this.an.indexOf(hex[i]);
+        const rand = this.seededRNG(0, this.an.length);
+        const newIndex = this.modulo(index - parseInt('' + rand), this.digs.length);
+        const newChar = this.digs[newIndex];
+        result += newChar;
         }
 
         this.seed = Math.abs(this.calculateHash(result));
         while (result.length < this.titleLength){
-          const index = parseInt('' + this.seededRNG(0, this.digs.length));
-          result += this.digs[index];
+        const index = parseInt('' + this.seededRNG(0, this.digs.length));
+        result += this.digs[index];
         }
 
         // return result.substring(result.length - this.titleLength);
         return result.substring(0, this.titleLength);
-      }
+    }
 }
-
-module.exports = { LibraryOfBabel };
