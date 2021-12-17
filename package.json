@@ -1,6 +1,6 @@
 {
   "name": "@hiddenbiscuit/library-of-babel",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Library of Babel implementation as a JS package.",
   "main": "./src/library-of-babel.ts",
   "scripts": {
