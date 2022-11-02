@@ -1,5 +1,5 @@
 export {};
-const { LibraryOfBabel } = require('../src/library-of-babel');
+const { LibraryOfBabel } = require('../src');
 
 const seedA = 69;
 const seedB = 70;

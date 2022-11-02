@@ -1,5 +1,5 @@
 export {};
-const { LibraryOfBabel } = require('../src/library-of-babel');
+const { LibraryOfBabel } = require('../src');
 
 let instanceA1;
 let instanceA2;
