@@ -6,12 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.LibraryOfBabel = void 0;
 
 class LibraryOfBabel {
-  seed: number;
-  pageLength: number;
-  titleLength: number;
-  an: string;
-  digs: string;
-  seededRNG: (min: number, max: number) => number;
+  an = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  digs = 'abcdefghijklmnopqrstuvwxyz, .aeiouy ';
 
   constructor(seed = 8888, pageLength = 3200, titleLength = 25) {
     if (typeof seed !== 'number') {
@@ -22,11 +18,7 @@ class LibraryOfBabel {
     this.pageLength = pageLength;
     this.titleLength = titleLength;
     this.seededRNG = this.seededRNGGenerator(seed);
-
-    this.an = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    this.digs = 'abcdefghijklmnopqrstuvwxyz, .aeiouy ';
   }
-
   /**
    * This function is the corrected form of modulo that can handle negative numbers.
    * See https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
@@ -34,18 +26,20 @@ class LibraryOfBabel {
    * @param {number}  numberB     The second number for the modulo calculation.
    * @returns {number}        Returns the correct value of numberA % numberB.
    */
+
+
   modulo = (numberA, numberB) => {
     return (numberA % numberB + numberB) % numberB;
   };
-
   /**
    * This generator function takes a seed number as input and returns a function that fits the following description:
    * Generates a random number between the minimum and maximum provided.
    * @param {number}  [min=0]     Minimum value that can be generated.
    * @param {number}  [max=1]     Maximum value that can be generated.
-   * @returns {number}            Randomly generated result between min and max.
+   * @returns {number}        Randomly generated result between min and max.
    */
-  seededRNGGenerator = (seed) => {
+
+  seededRNGGenerator = seed => {
     if (typeof seed !== 'number') {
       throw `Expecting an input of type: number, received: ${typeof seed}.`;
     }
@@ -61,13 +55,13 @@ class LibraryOfBabel {
 
     return newRNGFunction;
   };
-
   /**
-   * Converts an input string into a numeric hash represenatation.
+   * Converts an input string into a numeric has represenatation.
    * @param {string}  string      Input string for conversion.
    * @returns {number}            Numeric hash representation.
    */
-  calculateHash = (string: string) => {
+
+  calculateHash = string => {
     if (typeof string !== 'string') {
       throw `Expecting input to be of type string, received ${typeof string}.`;
     }
@@ -83,12 +77,12 @@ class LibraryOfBabel {
 
     return hash;
   };
-
   /**
    * Throws an error if the string passed to it is not of the required format.
    * @param {string} address  Address to validate
    */
-  validateAddress = (address: string) => {
+
+  validateAddress = address => {
     if (typeof address !== 'string') {
       throw `Expecting an input of type: string, received: ${typeof address}.`;
     } else {
@@ -97,14 +91,14 @@ class LibraryOfBabel {
       }
     }
   };
-
   /**
    * Searches for a given string and returns the location details.
    * @param {string} searchString   The string to search for in the library.
    * @param {string} searchType  Can be 'exact' or 'partial'. Determines if the search results should be an exact match, or partial match.
    * @returns {string}            The address of the entry containing the result.
    */
-  search = (searchString: string, searchType: 'exact' | 'partial') => {
+
+  search = (searchString, searchType) => {
     searchString = searchString.toLowerCase();
 
     if (typeof searchString !== 'string') {
@@ -140,6 +134,7 @@ class LibraryOfBabel {
       searchString = this.digs[parseInt('' + Math.random() * this.digs.length)] + searchString;
     } // We use the location hash to seed our RNG.
 
+
     this.seed = Math.abs(locHash);
 
     for (let i = 0; i < searchString.length; i++) {
@@ -154,13 +149,13 @@ class LibraryOfBabel {
 
     return hex + ':' + wall + ':' + shelf + ':' + parseInt(volume) + ':' + parseInt(page);
   };
-
   /**
    * Gets the contents of a page from the given address.
    * @param {string} address      The full address of a page in the library.
    * @returns {string}            The contents of the page.
    */
-  getPage = (address: string) => {
+
+  getPage = address => {
     this.validateAddress(address); //for each char of hex, it will be turned into the index value in the an string
 
     const addressArray = address.split(':');
@@ -201,7 +196,7 @@ class LibraryOfBabel {
    * @returns {string}        The title of the book
    */
 
-  getTitle = (address: string) => {
+  getTitle = address => {
     this.validateAddress(address);
     const addressArray = address.split(':');
     const hex = addressArray[0];

@@ -3,9 +3,9 @@ export class LibraryOfBabel {
     seed: number;
     pageLength: number;
     titleLength: number;
-    an: string;
-    digs: string;
     seededRNG: (min: number, max:number) => number;
+    an: string = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    digs: string = 'abcdefghijklmnopqrstuvwxyz, .aeiouy ';
 
     constructor (seed=8888, pageLength=3200, titleLength=25) {
         if (typeof seed !== 'number') {
@@ -16,10 +16,6 @@ export class LibraryOfBabel {
         this.pageLength = pageLength;
         this.titleLength = titleLength;
         this.seededRNG = this.seededRNGGenerator(seed);
-
-        // TODO: These two strings must be the same length (why? + what to rename them to?)
-        this.an = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        this.digs = 'abcdefghijklmnopqrstuvwxyz, .aeiouy ';
     }
 
     /**
