@@ -1,1 +1,1 @@
-module.exports = require('./dist/library-of-babel');
+module.exports = require('./dist');
