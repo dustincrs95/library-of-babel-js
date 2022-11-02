@@ -1,7 +1,8 @@
 {
-  "name": "@hiddenbiscuit/library-of-babel",
-  "version": "1.0.2",
-  "description": "Library of Babel implementation as a JS package.",
+  "name": "@nitsudgo/library-of-babel",
+  "version": "1.0.0",
+  "description": "A Library of Babel implementation written in Typescript.",
+  "license": "MIT",
   "main": "./index.js",
   "scripts": {
     "test": "jest",
@@ -9,15 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hiddenbiscuit/library-of-babel-js.git"
+    "url": "git+https://github.com/nitsudgo/library-of-babel.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "nitsudgo",
   "bugs": {
-    "url": "https://github.com/hiddenbiscuit/library-of-babel-js/issues"
+    "url": "https://github.com/nitsudgo/library-of-babel/issues"
   },
-  "homepage": "https://github.com/hiddenbiscuit/library-of-babel-js#readme",
+  "homepage": "https://github.com/nitsudgo/library-of-babel#readme",
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.5",

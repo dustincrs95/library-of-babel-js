@@ -65,4 +65,4 @@ npm run test
 ### Contributing
 To contribute, simply checkout to your own branch, push your commits to that branch, and then raise a pull request!
 
-## I hope you enjoy the package- do contribute!
+I hope you enjoy the package!
