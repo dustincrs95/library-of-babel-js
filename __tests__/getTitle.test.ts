@@ -4,9 +4,9 @@ const { LibraryOfBabel } = require('../src');
 const seedA = 69;
 const seedB = 70;
 
-const validAddressA = 'abc:1:2:3:4';
-const validAddressB = 'abc:1:2:3:7'; // Different page of book in validAddressA
-const validAddressC = 'abc:1:2:4:7'; // Different book entirely from validAddressA
+const validAddressA = 'abc:1:2:03:004';
+const validAddressB = 'abc:1:2:03:007'; // Different page of book in validAddressA
+const validAddressC = 'abc:1:2:04:007'; // Different book entirely from validAddressA
 const invalidAddress = 'abc:1:2:3s:4';
 
 describe('getTitle', () => {
