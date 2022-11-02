@@ -4,8 +4,8 @@ const { LibraryOfBabel } = require('../src');
 const seedA = 69;
 const seedB = 70;
 
-const validAddressA = 'WFIOWJFAODI2412:1:2:3:4';
-const validAddressB = 'AIJWIF2:1:2:3:7';
+const validAddressA = 'WFIOWJFAODI2412:1:2:03:004';
+const validAddressB = 'AIJWIF2:1:2:03:007';
 const invalidAddress = 'abc:1:2:3s:4';
 
 describe('getPage', () => {

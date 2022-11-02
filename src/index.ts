@@ -4,20 +4,51 @@ export class LibraryOfBabel {
     pageLength: number;
     titleLength: number;
     seededRNG: (min: number, max:number) => number;
+
     an: string = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     digs: string = 'abcdefghijklmnopqrstuvwxyz, .aeiouy ';
 
+    // These max limits are defined by the lore i.e. each hexagon has 4 walls of books, with the remaining 2 walls being doors that link to the adjacent hexagons.
+    maxWalls: number = 4;
+    maxShelves: number = 5;
+    maxVolumes: number = 32;
+    maxPages: number = 410;
+  
     constructor (seed=8888, pageLength=3200, titleLength=25) {
         if (typeof seed !== 'number') {
             throw `Expecting an input of type: number, received: ${typeof seed}.`
         }
-
+  
         this.seed = seed;
         this.pageLength = pageLength;
         this.titleLength = titleLength;
         this.seededRNG = this.seededRNGGenerator(seed);
     }
 
+    /**
+     * This function returns arrays of possible values for the address parameters.
+     * @param {number}      size    The size of the array.
+     * @returns {Record<string, Array<string>}            Returns the correct value of numberA % numberB.
+     */
+    getAddressOptions = () => {
+        function generateIncrementingPaddedArrayAtOne (size: number) {
+            const maxLengthOfPaddedString = String(size).length;
+            const incrementingArray = [];
+            for (let i = 0; i < size; i++) {
+                incrementingArray.push(i);
+            }
+            const incrementingPaddedArrayAtOne = incrementingArray.map(x => String(x + 1).padStart(maxLengthOfPaddedString, '0'));
+            return incrementingPaddedArrayAtOne;
+        }
+
+        return {
+            walls: generateIncrementingPaddedArrayAtOne(this.maxWalls),
+            shelves: generateIncrementingPaddedArrayAtOne(this.maxShelves),
+            volumes: generateIncrementingPaddedArrayAtOne(this.maxVolumes),
+            pages: generateIncrementingPaddedArrayAtOne(this.maxPages),
+        }
+    }
+  
     /**
      * This function is the corrected form of modulo that can handle negative numbers.
      * See https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
@@ -28,7 +59,7 @@ export class LibraryOfBabel {
     modulo = (numberA: number, numberB: number) : number => {
         return ((numberA % numberB) + numberB) % numberB;
     }
-
+  
     /**
      * This generator function takes a seed number as input and returns a function that fits the following description:
      * Generates a random number between the minimum and maximum provided.
@@ -40,20 +71,20 @@ export class LibraryOfBabel {
         if (typeof seed !== 'number') {
             throw `Expecting an input of type: number, received: ${typeof seed}.`
         }
-
+  
         const newRNGFunction = (min = 0, max = 1) : number => {
             const rngMult = 9301 * seed;
             const rngAdd = 49297 * seed;
             const rngDenom = 233280;
-
-            this.seed = (this.seed * rngMult + rngAdd) % rngDenom;
+  
+            this.seed = this.modulo((this.seed * rngMult + rngAdd), rngDenom);
             const randomFactor = this.seed / rngDenom;
             return min + randomFactor * (max - min);
         }
-
+  
         return newRNGFunction;
     }
-
+  
     /**
      * Converts an input string into a numeric has represenatation.
      * @param {string}  string      Input string for conversion.
@@ -63,10 +94,10 @@ export class LibraryOfBabel {
         if (typeof string !== 'string') {
             throw `Expecting input to be of type string, received ${typeof string}.`
         }
-
+  
         let hash = 0;
         if (string.length == 0) return hash;
-
+  
         for (let i = 0; i < string.length; i++) {
             const char = string.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;
@@ -74,7 +105,7 @@ export class LibraryOfBabel {
         }
         return hash;
     };
-
+  
     /**
      * Throws an error if the string passed to it is not of the required format.
      * @param {string} address  Address to validate
@@ -83,12 +114,20 @@ export class LibraryOfBabel {
         if (typeof address !== 'string') {
             throw `Expecting an input of type: string, received: ${typeof address}.`
         } else {
-            if (!address.match(/^[\w\d]+:[\d]+:[\d]+:[\d]+:[\d]+$/g)) {
-                throw `Input does not match the expected pattern: /^[\w\d]+:[\d]+:[\d]+:[\d]+:[\d]+$/g`
+            if (!address.match(/^[\w\d]+:\d{1}:\d{1}:\d{2}:\d{3}$/g)) {
+                throw `Input does not match the expected pattern: /^[\w\d]+:\d{1}:\d{1}:\d{2}:\d{3}$/g`
             }
+
+            const [_hex, wall, shelf, volume, page] = address.split(':').map(x => parseInt(x));
+            if (
+                    (wall < 1 || wall > this.maxWalls)
+                ||  (shelf < 1 || shelf > this.maxShelves)
+                ||  (volume < 1 || volume > this.maxVolumes)
+                ||  (page < 1 || page > this.maxPages)
+                ) { throw `Some parameters of the address are not in the appropriate ranges!` }
         }
     }
-
+  
     /**
      * Searches for a given string and returns the location details.
      * @param {string} searchString   The string to search for in the library.
@@ -100,7 +139,7 @@ export class LibraryOfBabel {
         if (typeof searchString !== 'string') {
             throw `Expected a searchString of type 'string', received ${typeof searchString}`
         }
-
+  
         if (searchType === 'exact') {
             searchString = searchString.padEnd(this.pageLength, ' ');
         } else if (searchType === 'partial') {
@@ -108,26 +147,23 @@ export class LibraryOfBabel {
         } else {
             throw `Expected a searchType of 'exact' or 'partial', received ${searchType}`
         }
-
+  
         // Randomly generate the location of the current book
-        // 1 <= wall <= 4
-        const wall = ''+parseInt('' + (Math.random() * 3 + 1));
-        // 1 <= shelf <= 5
-        const shelf = ''+parseInt('' + (Math.random() * 4 + 1));
-        // 1 <= volume <= 32
-        const volume = (''+parseInt('' + (Math.random() * 31 + 1))).padStart(2, '0');
-        // 1 <= page <= 410
-        const page = (''+parseInt('' + (Math.random() * 409 + 1))).padStart(3, '0');
-
+        // Since we use the max thresholds defined in the class, the search result is guaranteed to fall within bounds.
+        const wall = ''+parseInt('' + (Math.random() * this.maxWalls + 1));
+        const shelf = ''+parseInt('' + (Math.random() * this.maxShelves + 1));
+        const volume = (''+parseInt('' + (Math.random() * this.maxVolumes + 1))).padStart(2, '0');
+        const page = (''+parseInt('' + (Math.random() * this.maxPages + 1))).padStart(3, '0');
+  
         // Add the above together and calculate the hash
         const locHash = this.calculateHash((wall+shelf+volume+page));
         let hex = '';
-
+  
         // The "depth" (character index on the page) at which the search result is found.
         // Random value between 0 and the total length of the page minus the length of the search string itself.
         // This ensures that the search result "fits" on the page.
         const depth = parseInt('' + (Math.random() * (this.pageLength - searchString.length)));
-
+  
         // For every character in the page up until the index where we "find" the search result, put in random characters.
         for (let x = 0; x < depth; x++){
             searchString = this.digs[parseInt('' + (Math.random() * this.digs.length))] + searchString;
@@ -135,7 +171,7 @@ export class LibraryOfBabel {
     
         // We use the location hash to seed our RNG.
         this.seed = Math.abs(locHash);
-
+  
         for (let i = 0; i < searchString.length; i++){
             const index = this.digs.indexOf(searchString[i]);
             // for each calculated value of the rng, it will be added to the index value and modded to len of an
@@ -145,10 +181,10 @@ export class LibraryOfBabel {
             //hex will be built from the indexes translated into an
             hex += newChar;
         }
-
-        return hex+':'+wall+':'+shelf+':'+parseInt(volume)+':'+parseInt(page)
+  
+        return hex+':'+wall+':'+shelf+':'+volume+':'+page;
     }
-
+  
     /**
      * Gets the contents of a page from the given address.
      * @param {string} address      The full address of a page in the library.
@@ -156,21 +192,14 @@ export class LibraryOfBabel {
      */
     getPage = (address: string) : string => {
         this.validateAddress(address);
-
-        //for each char of hex, it will be turned into the index value in the an string
-        const addressArray = address.split(':');
-        const hex = addressArray[0];
-        const wall = addressArray[1];
-        const shelf = addressArray[2];
-        const volume = addressArray[3];
-        const page = addressArray[4];
-
+        const [hex, wall, shelf, volume, page] = address.split(':');
+  
         // Calculate the hash of the location8
         const locHash = this.calculateHash(wall + shelf + volume.padStart(2, '0') + page.padStart(3, '0'));
-
+  
         // The hash is used to seed the RNG
         this.seed = Math.abs(locHash);
-
+  
         let result = '';
         for (let i = 0; i < hex.length; i++){
         const index = this.an.indexOf(hex[i]);
@@ -181,7 +210,7 @@ export class LibraryOfBabel {
         // document will be built from the indexes translated into digs
         result += newChar;
         }
-
+  
         // any leftover space will be filled with random numbers seeded by the hash of the result so far
         this.seed = Math.abs(this.calculateHash(result));
         while (result.length < this.pageLength){
@@ -191,7 +220,7 @@ export class LibraryOfBabel {
 
         return result.substring(result.length - this.pageLength);
     }
-
+  
     /**
      * Generates the title for a book with a given address
      * @param {string} address  The address string for a given page
@@ -199,20 +228,15 @@ export class LibraryOfBabel {
      */
     getTitle = (address: string) : string => {
         this.validateAddress(address);
-
-        const addressArray = address.split(':');
-        const hex = addressArray[0];
-        const wall = addressArray[1];
-        const shelf = addressArray[2];
-        const volume = addressArray[3];
-
+        const [hex, wall, shelf, volume, _page] = address.split(':');
+  
         // We do +4 here instead of using the title from the address
         // This is because the title is for the whole book, so it shouldn't change with the page number
         const locHash = this.calculateHash(wall + shelf+ volume + 4);
-
+  
         this.seed = Math.abs(locHash);
         let result = '';
-
+  
         for (let i = 0; i < hex.length; i++){
         const index = this.an.indexOf(hex[i]);
         const rand = this.seededRNG(0, this.an.length);
@@ -220,14 +244,14 @@ export class LibraryOfBabel {
         const newChar = this.digs[newIndex];
         result += newChar;
         }
-
+  
         this.seed = Math.abs(this.calculateHash(result));
         while (result.length < this.titleLength){
         const index = parseInt('' + this.seededRNG(0, this.digs.length));
         result += this.digs[index];
         }
-
+  
         // return result.substring(result.length - this.titleLength);
         return result.substring(0, this.titleLength);
     }
-}
+  }

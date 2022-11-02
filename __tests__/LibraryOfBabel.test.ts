@@ -38,7 +38,7 @@ describe('LibraryOfBabel validateAddress helper', () => {
       });
         
     it('should not throw an error if the input string is of the correct format', () => {
-        expect(() => instanceA.validateAddress('a:1:2:3:4')).not.toThrow();
+        expect(() => instanceA.validateAddress('a:1:2:03:004')).not.toThrow();
     });
         
     it('should throw an error if the input string is of the incorrect format', () => {
